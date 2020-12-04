@@ -8,7 +8,7 @@ const char * const sys_errlist[];
 int sys_nerr;
 int errno;
 
-int main(){
+int main(int argc, char *argv[]){
 
     for(int i = 0; i <= 255; i++){
         printf("Error #%d: %s\n", i, strerror(i));

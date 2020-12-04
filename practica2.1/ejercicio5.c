@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <sys/utsname.h>
 
-int main(){
+int main(int argc, char *argv[]){
     struct utsname unameData;
 
     if(uname(&unameData) == -1) perror("Error");
