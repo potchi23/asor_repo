@@ -1,0 +1,4 @@
+rw-r--r-x
+
+$ chmod 645 fichero
+$ chmod u+rw-x,g+r-w-x,o+rx-w fichero

@@ -1,0 +1,22 @@
+$ ln -s test.c testsym
+$ ln -s Documents documentssym
+    1443009  Documents
+    1361925  documentssym
+
+    1361941  test.c
+    1361959  testsym
+
+    El numero de i-nodo son distintos
+
+$ ln -s test.c testsym
+    1361941  test.c
+    1361941  testsym
+
+$ ln Documents documentssym -> no se permite
+
+- Con enlace rígido: si eliminamos el fichero original,
+                     se puede abrir el enlace.
+
+- Con enlace simbólico: si eliminamos el fichero original,
+                        se rompe el enlace y no se puede abrir
+                        el fichero.

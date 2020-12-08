@@ -1,0 +1,5 @@
+$ umask 0027
+
+Todos los comandos funcionan con normalidad,
+pero al hacer ls -l, se ve que no hay permisos
+de escritura para el grupo y ningún permiso para otros.

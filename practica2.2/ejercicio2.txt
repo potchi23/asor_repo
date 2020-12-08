@@ -1,0 +1,11 @@
+/home/cursoredes: drwx------. 19 cursoredes cursoredes 4096 Dec  8 18:23 .
+Directorio, permisos de lectura, escritura y ejecución (propietario)
+
+/home/cursoredes/Desktop: drwxr-xr-x 2 cursoredes cursoredes 116 Sep  9  2018 .
+Directorio, permisos rwx (propietario), r (grupo), r-x (resto)
+
+/home/cursoredes/Documents: drwxr-xr-x 2 cursoredes cursoredes 6 Sep  9  2018 .
+Directorio, permisos rwx (propietario), r (grupo), r-x (resto)
+
+/: dr-xr-xr-x. 17 root root 224 Sep  3  2018 .
+Directorio, lectura y ejecución para propietario, grupo, y resto

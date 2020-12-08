@@ -1,0 +1,13 @@
+ls:
+
+-a: muestra todos los resultados sin ignorar aquellos cuyo nombre empiece por '.'.
+-l: muestra todos los resultados detalladamente (con permisos, propietario, fecha de creacion...).
+-d: muestra el propio directorio (sin su contenido).
+-h: muestra los tamaños en un formato legible por el usuario.
+-i: muestra el numero de índice para cada fichero.
+-R: muestra los subdirectorio de manera recursiva.
+-1: muestra un fichero por línea
+-F: muestra los resultados, añadiendo un indicador al final de cada 
+    resultado ('/' para directorios, '@' para enlaces simbólicos y '*' 
+    para ficheros).
+--color: modifica el color de la salida estándar.
