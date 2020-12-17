@@ -13,7 +13,9 @@ void recorreDirectorio(char* path, off_t &st_size){
         nextDirStruct = readdir(dir);
         while(nextDirStruct != NULL){
             if(strcmp(nextDirStruct->d_name, ".") != 0 && strcmp(nextDirStruct->d_name, "..") != 0){
-                char nextPath[sizeof(path) + sizeof(nextDirStruct->d_name) + 1]; // el tamaño es el tamaño del path inicial + tamaño del proximo path + tamaño del caracter "/"
+
+                /* El tamaño de nextPath es el tamaño del path inicial + tamaño del proximo path + tamaño del caracter "/". */
+                char nextPath[sizeof(path) + sizeof(nextDirStruct->d_name) + 1]; 
 
                 strcpy(nextPath, path);
                 strcat(nextPath, "/");
@@ -28,18 +30,28 @@ void recorreDirectorio(char* path, off_t &st_size){
                     struct stat statbuf;
                     mode_t mode;
                     
-                    if(stat(nextPath, &statbuf) == -1){
+                    if(lstat(nextPath, &statbuf) == -1){
                         perror("Error apertura fichero");
                     }
                     else{
                         mode = statbuf.st_mode;
                         
-                        if(S_ISREG(mode))
-                            printf("%s\n", nextDirStruct->d_name);
-                        else if(S_ISLNK(mode))
-                            printf("%s -> \n", nextDirStruct->d_name);
-                        else
-                            printf("%s*\n", nextDirStruct->d_name);
+                        if(S_ISREG(mode)){
+                            if(mode & S_IXUSR){
+                                printf("%s*\n", nextDirStruct->d_name);
+                            }
+                            else{
+                                printf("%s\n", nextDirStruct->d_name);
+                            }
+                        }
+                        else if(S_ISLNK(mode)){
+                            char *buf;
+
+                            if(readlink(nextPath, buf, sizeof(buf) - 1) == -1) perror("Error leyendo enlace simbólico");
+                            else{
+                                printf("%s -> %s\n", nextDirStruct->d_name, buf);
+                            }
+                        }
 
                         st_size += statbuf.st_size;
                     }
@@ -59,11 +71,16 @@ void recorreDirectorio(char* path, off_t &st_size){
 
 // /home/richard/Documentos/vscode
 int main(int argc, char **argv){
-    off_t st_size = 0;
+    
+    if(argc == 2){
+        off_t st_size = 0;
 
-    recorreDirectorio(argv[1], st_size);
-
-    printf("\nTamaño total: %ld bytes\n", st_size);
+        recorreDirectorio(argv[1], st_size);
+        printf("\nTamaño total: %ld bytes\n", st_size);
+    }
+    else{
+        printf("Número de argumentos permitidos: 1\n");
+    }
 
     return 1;
 }

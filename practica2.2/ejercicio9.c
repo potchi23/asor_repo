@@ -19,7 +19,7 @@ int main(int argc, char **argv){
     time_t time; //se mostrara en segundos
     char *filetype;
 
-    if(stat(argv[1], &statbuf) == -1){
+    if(lstat(argv[1], &statbuf) == -1){
         perror("Error");
     }
     else{
@@ -32,9 +32,9 @@ int main(int argc, char **argv){
         st_atim = statbuf.st_atim;
         time = st_atim.tv_sec;
 
-        if(S_ISDIR(mode)) filetype = "dir";
+        if(S_ISREG(mode)) filetype = "reg";
         else if(S_ISLNK(mode)) filetype = "lnk";
-        else if(S_ISREG(mode)) filetype = "reg";
+        else if(S_ISDIR(mode)) filetype = "dir";
 
         printf("Major:%u Minor:%u i-node:%ld filetype:%s last_access:%lds\n", major, minor, inode, filetype, time);
     }
