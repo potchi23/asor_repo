@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-void recorreDirectorio(char* path, off_t &st_size){
+void extended_ls(char* path, off_t *st_size){
     DIR *dir = opendir(path);
     struct dirent *nextDirStruct;
      
@@ -46,20 +46,21 @@ void recorreDirectorio(char* path, off_t &st_size){
                         }
                         else if(S_ISLNK(mode)){
                             char *buf;
-
-                            if(readlink(nextPath, buf, sizeof(buf) - 1) == -1) perror("Error leyendo enlace simbólico");
+                            ssize_t size = readlink(nextPath, buf, sizeof(buf) - 1);
+                            if(size == -1) perror("Error leyendo enlace simbólico");
                             else{
+                                buf[size] = '\0';
                                 printf("%s -> %s\n", nextDirStruct->d_name, buf);
                             }
                         }
 
-                        st_size += statbuf.st_size;
+                        *st_size += statbuf.st_size;
                     }
                 }
 
                 closedir(nextDir);
 
-                recorreDirectorio(nextPath, st_size);
+                extended_ls(nextPath, st_size);
             }
            
             nextDirStruct = readdir(dir);
@@ -69,14 +70,14 @@ void recorreDirectorio(char* path, off_t &st_size){
     closedir(dir);
 }
 
-// /home/richard/Documentos/vscode
 int main(int argc, char **argv){
     
     if(argc == 2){
         off_t st_size = 0;
 
-        recorreDirectorio(argv[1], st_size);
-        printf("\nTamaño total: %ld bytes\n", st_size);
+        extended_ls(argv[1], &st_size);
+        
+        printf("\nTamaño total: %ld kB\n", st_size/1000);
     }
     else{
         printf("Número de argumentos permitidos: 1\n");
