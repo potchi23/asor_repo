@@ -1,0 +1,4 @@
+$ ps -o pid,gid,sid,state,comm
+
+Se comparte el identificador de grupo y el identificador de
+sesión. Se ejecutan la shell y ps. Se crea el GID 1000.

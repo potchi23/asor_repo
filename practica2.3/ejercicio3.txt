@@ -1,0 +1,4 @@
+# chrt --fifo 12 ./exe
+
+La prioriodad del programa es 12. Se heredan los atributos de planificacion,
+ya que esto se puede observar en los valores mínimo y máximo.
