@@ -14,21 +14,6 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    char* arg1[2];
-    char* arg2[2];
-
-    for(int i = 0; i < argc - 1; i++){
-        if(i < 2){
-            arg1[i] = argv[i + 1];
-        }
-        else{
-            arg2[i - 2] = argv[i + 1];
-        }
-    }
-
-    arg1[2] = '\0';
-    arg2[2] = '\0';
-
     if(pipe(pipefd) == -1){
         perror("Pipe error");
         return -1;
@@ -41,34 +26,34 @@ int main(int argc, char **argv){
             perror("Fork error");
             return -1;
             break;
+            
         case 0:
             close(pipefd[1]);
             if(dup2(pipefd[0], 0) == -1){
                 perror("dup error");
                 return -1;
             }
-            close(pipefd[0]);
             
-            if(execvp(arg1[0], arg1) == -1){
-                perror("error de ejecucion cmd1");
+            if(execlp(argv[3], argv[3], argv[4], NULL) == -1){
+                perror("error de ejecucion cmd2");
                 return -1;
             }
 
             break;
+
         default:
             close(pipefd[0]);
             if(dup2(pipefd[1], 1) == -1){
                 perror("dup error");
                 return -1;
             }
-            close(pipefd[1]);
             
-            if(execvp(arg2[0], arg2) == -1){
-                perror("error de ejecucion cmd2");
+            if(execlp(argv[1], argv[1], argv[2], NULL) == -1){
+                perror("error de ejecucion cmd1");
                 return -1;
             }
 
-            //wait(NULL);
+            wait(NULL);
             break;
     }
 
