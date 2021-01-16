@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define FIFO "/tmp/fifo"
+#define FIFO "pipe"
 
 // El pipe se encuentra en /tmp/fifo
 
@@ -16,10 +16,10 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    if(mkfifo(FIFO, 0666) == -1 ){
+    /*if(mkfifo(FIFO, 0666) == -1 ){
         perror("Error creacion pipe");
         return -1;
-    }
+    }*/
 
     int fd = open(FIFO, O_WRONLY);
     if(fd == -1){
@@ -34,7 +34,6 @@ int main(int argc, char **argv){
     }
 
     close(fd);
-    unlink(FIFO);
 
     return 0;
 }
