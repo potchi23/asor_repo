@@ -7,7 +7,7 @@
 
 #define FIFO "pipe"
 
-// El pipe se encuentra en /tmp/fifo
+// El pipe se encuentra en ./pipe
 
 int main(int argc, char **argv){
 
