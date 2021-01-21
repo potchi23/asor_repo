@@ -51,7 +51,8 @@ int main(int argc, char **argv){
         FD_ZERO(&set);
         FD_SET(0, &set);
         FD_SET(udp_sd, &set);
-        
+        int toClient;
+
         int selection = select(udp_sd + 1, &set, NULL, NULL, NULL);
         if(selection == -1)
           perror("Error select");
@@ -67,7 +68,7 @@ int main(int argc, char **argv){
             
             addr = res->ai_addr;
             addrLen = res->ai_addrlen;
-            printf("Lectura por teclado\n");
+            toClient = 0;
         }
         else if(FD_ISSET(udp_sd, &set)){
             int size = recvfrom(udp_sd, &command, sizeof(command), 0, (struct sockaddr *) &storage, &storage_len);
@@ -89,6 +90,7 @@ int main(int argc, char **argv){
             addrLen = storage_len;
 
             printf("%d bytes de %s:%s\n", size, host, port);
+            toClient = 1;
         }
         
         setlocale(LC_TIME, "");
@@ -101,26 +103,34 @@ int main(int argc, char **argv){
         if(command[0] == 't'){
             strftime(buffer, 256, "%H:%M:%S", lt);
 
-            int size = sendto(udp_sd, buffer, strlen(buffer), 0, addr, addrLen);
+            if(toClient){
+                int size = sendto(udp_sd, buffer, strlen(buffer), 0, addr, addrLen);
 
-            if(size == -1){
-                perror("Error enviando hora");
-                return -1;
+                if(size == -1){
+                    perror("Error enviando hora");
+                    return -1;
+                }
+            }
+            else{
+                printf("%s\n", buffer);
             }
         }
         else if (command[0] == 'd'){
             strftime(buffer, 256, "%d/%m/%Y", lt);
-            int size = sendto(udp_sd, buffer, strlen(buffer), 0, addr, addrLen);
-            if(size == -1){
-                perror("Error enviando fecha");
-                return -1;
+
+            if(toClient){
+                int size = sendto(udp_sd, buffer, strlen(buffer), 0, addr, addrLen);
+                if(size == -1){
+                    perror("Error enviando fecha");
+                    return -1;
+                }
+            }
+            else{
+                printf("%s\n", buffer);
             }
         }
         else if(command[0] == 'q'){
             printf("Salir\n");
-        }
-        else{
-            printf("Comando no valido\n");
         }
         
     }while(command[0] != 'q');
